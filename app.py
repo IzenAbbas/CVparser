@@ -180,7 +180,7 @@ class HybridBiLSTM_CNN(nn.Module):
         x = self.fc2(x)
         return x
 
-BASE_PATH = "/home/izenabbas/myenv/CV_Parser"
+BASE_PATH = os.path.dirname(os.path.abspath(__file__))
 
 @st.cache_resource
 def load_resources_v2():
@@ -195,16 +195,16 @@ def load_resources_v2():
     hidden_dim = 128
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model1 = BiLSTMClassifier(vocab_size=vocab_size, embed_dim=embed_dim, hidden_dim=hidden_dim, num_classes=num_classes)
-    model1.load_state_dict(torch.load(f"{BASE_PATH}/BiLSTM+Attention.pt", map_location=device))
+    model1.load_state_dict(torch.load(f"{BASE_PATH}/BiLSTM_Attention.pt", map_location=device))
     model1 = model1.to(device)
     model1.eval()
     model2 = HybridBiLSTM_CNN_NoAttention(vocab_size=vocab_size, embed_dim=embed_dim, hidden_dim=hidden_dim, num_classes=num_classes)
-    model2.load_state_dict(torch.load(f"{BASE_PATH}/BiLSTM+CNN.pt", map_location=device))
+    model2.load_state_dict(torch.load(f"{BASE_PATH}/BiLSTM_CNN.pt", map_location=device))
     model2 = model2.to(device)
     model2.eval()
     
     model3 = HybridBiLSTM_CNN(vocab_size=vocab_size, embed_dim=embed_dim, hidden_dim=hidden_dim, num_classes=num_classes)
-    model3.load_state_dict(torch.load(f"{BASE_PATH}/BiLSTM+CNN+Attention.pt", map_location=device))
+    model3.load_state_dict(torch.load(f"{BASE_PATH}/BiLSTM_CNN_Attention.pt", map_location=device))
     model3 = model3.to(device)
     model3.eval()
     clf1 = pickle.load(open(f"{BASE_PATH}/clf1.pkl", "rb"))
